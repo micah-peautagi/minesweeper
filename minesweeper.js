@@ -2,19 +2,19 @@ document.addEventListener('DOMContentLoaded', startGame)
 
 // Define your `board` object here!
 var board = {
-  cells: generateCells(5)
+  cells: generateCells(6)
 }
 
 function generateCells (size)  {
 
-  // create cells array
-  var cells = []
+
+var cells = []
 
   
-// Here in the middle Create a loop that automatically generates the cells
- for (i = 0; i < size; i++;) {
 
-   for (j = 0; j < size; i++){
+ for (i = 0; i < size; i++) {
+
+   for (j = 0; j < size; j++){
 
     cell = {
       row: i, 
@@ -28,12 +28,11 @@ function generateCells (size)  {
    }
  }
 
-// AND fill the cells array with the generated cells
 
 
 
 
-  // return the cells array
+ 
   return cells
 }
 
@@ -49,6 +48,25 @@ function generateCells (size)  {
 
 function startGame () {
   // Don't remove this function call: it makes the game work!
+
+
+board.cells[4].isMine = true
+board.cells[6].isMine = true
+board.cells[8].isMine = true
+board.cells[14].isMine = true
+board.cells[20].isMine = true
+
+
+for (i = 0; i <board.cells.length; i++) {
+  board.cells[i].surroundingMines = countSurroundingMines(board.cells[i])
+}
+
+
+document.addEventListener("click", checkForWin);
+document.addEventListener('contextmenu', checkForWin);
+ 
+
+
   lib.initBoard()
 }
 
@@ -58,10 +76,26 @@ function startGame () {
 // 2. Are all of the mines marked?
 function checkForWin () {
 
+  for (var i = 0; i < board.cells.length; i++) { 
+    
+    if (board.cells[i].isMine && board.cells[i].isMarked) { 
+      return;
+    }
+  }
+  for (var i = 0; i < board.cells.length; i++) {
+
+     if (board.cells[i].isMine == false && board.cells[i].hidden) { 
+      return
+    }
+}
+ lib.displayMessage('You win!') 
+
+}
+
   // You can use this function call to declare a winner (once you've
   // detected that they've won, that is!)
   //   lib.displayMessage('You win!')
-}
+
 
 // Define this function to count the number of mines around the cell
 // (there could be as many as 8). You don't have to get the surrounding
@@ -71,6 +105,27 @@ function checkForWin () {
 //
 // It will return cell objects in an array. You should loop through 
 // them, counting the number of times `cell.isMine` is true.
+
+
 function countSurroundingMines (cell) {
+
+var surrounding = lib.getSurroundingCells(cell.row, cell.col)
+var count = 0
+
+for (j = 0; j < surrounding.length; j++) {
+  if (surrounding[j].isMine) {
+    count++
+
+  }
+
+  }
+  return count
 }
 
+  //make a surrounding array variable using the lib function
+  // make a count variable that starts at 0
+  //loop through all of the surrounding cells and
+  //if they are a mine add the count
+  //return count 
+
+ 
